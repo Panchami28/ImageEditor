@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="pit-og-QuP">
+    <device id="retina6_5" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Home Screen View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="HomeScreenViewController" customModule="ImageEditor" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cup-8n-bzi">
+                                <rect key="frame" x="127.66666666666669" y="448" width="159" height="54"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                <inset key="contentEdgeInsets" minX="15" minY="15" maxX="15" maxY="15"/>
+                                <state key="normal" title="Open Camera">
+                                    <color key="titleColor" systemColor="secondarySystemGroupedBackgroundColor"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="15"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="captureButtonClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="YwF-JG-M2i"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Cup-8n-bzi" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="D0o-fW-9lb"/>
+                            <constraint firstItem="Cup-8n-bzi" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="pPd-m0-hwc"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="hmB-32-qPw"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1050.7246376811595" y="123.88392857142857"/>
+        </scene>
+        <!--Preview Screen View Controller-->
+        <scene sceneID="ggX-g9-ejV">
+            <objects>
+                <viewController storyboardIdentifier="PreviewScreenViewController" id="1Nk-eS-mxF" customClass="PreviewScreenViewController" customModule="ImageEditor" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ly9-i1-7tR">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" contentInsetAdjustmentBehavior="never" maximumZoomScale="4" translatesAutoresizingMaskIntoConstraints="NO" id="wGz-x2-t94">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Rk6-KB-ycb">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="818"/>
+                                        <gestureRecognizers/>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="pLg-Si-tns" appends="YES" id="k8p-G1-W8P"/>
+                                            <outletCollection property="gestureRecognizers" destination="xqI-1O-oYT" appends="YES" id="GMQ-Hz-JvP"/>
+                                        </connections>
+                                    </imageView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="Rk6-KB-ycb" secondAttribute="bottom" id="0YS-ls-pb0"/>
+                                    <constraint firstAttribute="trailing" secondItem="Rk6-KB-ycb" secondAttribute="trailing" id="1lR-qy-oZc"/>
+                                    <constraint firstItem="Rk6-KB-ycb" firstAttribute="height" secondItem="wGz-x2-t94" secondAttribute="height" id="6Oh-Ll-h6L"/>
+                                    <constraint firstItem="Rk6-KB-ycb" firstAttribute="leading" secondItem="wGz-x2-t94" secondAttribute="leading" id="75W-IC-4Ic"/>
+                                    <constraint firstItem="Rk6-KB-ycb" firstAttribute="width" secondItem="wGz-x2-t94" secondAttribute="width" id="Zjm-8F-F8Z"/>
+                                    <constraint firstItem="Rk6-KB-ycb" firstAttribute="top" secondItem="wGz-x2-t94" secondAttribute="top" id="xq4-xL-xKb"/>
+                                </constraints>
+                                <viewLayoutGuide key="contentLayoutGuide" id="0AK-C9-b9c"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="USY-SN-nPd"/>
+                            </scrollView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Fm1-Z3-YIr"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Fm1-Z3-YIr" firstAttribute="top" secondItem="wGz-x2-t94" secondAttribute="top" id="73p-cx-V6W"/>
+                            <constraint firstItem="Fm1-Z3-YIr" firstAttribute="trailing" secondItem="wGz-x2-t94" secondAttribute="trailing" id="GVU-lM-Ltn"/>
+                            <constraint firstItem="wGz-x2-t94" firstAttribute="bottom" secondItem="Fm1-Z3-YIr" secondAttribute="bottom" id="brX-P1-pOx"/>
+                            <constraint firstItem="Fm1-Z3-YIr" firstAttribute="leading" secondItem="wGz-x2-t94" secondAttribute="leading" id="vGv-Ne-OTe"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="imageScrollView" destination="wGz-x2-t94" id="Zxx-0I-kaM"/>
+                        <outlet property="imageViewDoubleTapGestureRecognizer" destination="xqI-1O-oYT" id="7Ez-zJ-8l4"/>
+                        <outlet property="imageViewTripleTapGestureRecognizer" destination="pLg-Si-tns" id="q8E-5n-zf8"/>
+                        <outlet property="previewImageView" destination="Rk6-KB-ycb" id="z4N-UB-bcs"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9Dg-7z-FtH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer numberOfTapsRequired="3" id="pLg-Si-tns" userLabel="Triple Tap Gesture Recognizer">
+                    <connections>
+                        <action selector="tripleTapImage:" destination="1Nk-eS-mxF" id="fSh-5Z-8VY"/>
+                        <outlet property="delegate" destination="1Nk-eS-mxF" id="gnu-Co-HG1"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer numberOfTapsRequired="2" id="xqI-1O-oYT" userLabel="Double Tap Gesture Recognizer">
+                    <connections>
+                        <action selector="doubleTapImage:" destination="1Nk-eS-mxF" id="lde-UP-qaG"/>
+                        <outlet property="delegate" destination="1Nk-eS-mxF" id="VQi-at-Urm"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="1808.6956521739132" y="123.88392857142857"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="gVX-De-xEu">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="pit-og-QuP" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="X6l-jg-has">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="pnH-sS-xbA"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="skQ-B5-rVN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="140.57971014492756" y="123.88392857142857"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="secondarySystemGroupedBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
