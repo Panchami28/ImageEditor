@@ -86,7 +86,6 @@
 				272BF6B6BFC4943C3EF1150C /* Pods-ImageEditor.debug.xcconfig */,
 				EDEB76F1B1FA1846CDC7F4A9 /* Pods-ImageEditor.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};

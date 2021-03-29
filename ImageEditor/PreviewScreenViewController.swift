@@ -24,7 +24,7 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         previewImageView.image = previewImage
         imageScrollView.delegate = self
         imageViewDoubleTapGestureRecognizer.delegate = self
-        let context = CIContext()
+        imageViewTripleTapGestureRecognizer.delegate = self
     }
     
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
@@ -62,63 +62,96 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         zoomRect.size.width  = previewImageView.frame.size.width  / scale
         zoomRect.origin.x = center.x - ((zoomRect.size.width)/2)
         zoomRect.origin.y = center.y - ((zoomRect.size.height)/2)
-
-//        print("Center: \(center)")
-//        print("Origin values x: \(zoomRect.origin.x) y: \(zoomRect.origin.y)")
-//        print("Height Nd Width of zoomRect:\(zoomRect.size.height) \(zoomRect.size.width)")
-//        print("Height Nd Width of previewImageView:\(previewImageView.frame.size.height) \(previewImageView.frame.size.width)")
         return zoomRect
     }
     
     @objc private func addTapped() {
-        let filterMenu = UIAlertController(title: "Filters", message: "Choose Filter", preferredStyle: .actionSheet)
-        let filter1Action = UIAlertAction(title: "Sepia Filter", style: .default) {[weak self] (action) in
-            if let imageToEdit = self?.previewImage,
-               let originalCIImage = CIImage(image: imageToEdit),
-               let sepiaCIImage = self?.sepiaFilter(originalCIImage, intensity:0.9) {
-                let capturedImage = UIImage(ciImage: sepiaCIImage, scale: imageToEdit.scale, orientation: imageToEdit.imageOrientation)
-                self?.previewImageView.image = capturedImage.fixOrientation()
+        let filterMenu = UIAlertController(title: "Filters", message: "", preferredStyle: .actionSheet)
+        let colorFilterAction = UIAlertAction(title: "Color Filters", style: .default) { [weak self] (action) in
+            let colorFilterMenu = UIAlertController(title: "Color Filter", message: "", preferredStyle: .actionSheet)
+            let sepiaFilterAction = UIAlertAction(title: "Sepia Filter", style: .default) {[weak self] (action) in
+                if let imageInCIFormat = self?.convertToCIImage(),
+                   let sepiaCIImage = self?.sepiaFilter(imageInCIFormat, intensity:0.9) {
+                    self?.displayFilteredImage(imageToDisplay: sepiaCIImage)
+                }
             }
-        }
-        let filter2Action = UIAlertAction(title: "Bloom Filter", style: .default) {[weak self] (action) in
-            if let imageToEdit = self?.previewImage,
-               let originalCIImage = CIImage(image: imageToEdit) ,
-               let bloomCIImage = self?.bloomFilter(originalCIImage, intensity: 1, radius: 3) {
-                let capturedImage = UIImage(ciImage: bloomCIImage, scale: imageToEdit.scale, orientation: imageToEdit.imageOrientation)
-                self?.previewImageView.image = capturedImage.fixOrientation()
+            let photoFilterAction = UIAlertAction(title: "Photo Effect Transfer Filter", style: .default) { [weak self] (action) in
+                if let imageInCIFormat = self?.convertToCIImage(),
+                   let photoFilterCIImage = self?.photoEffectFilter(imageInCIFormat) {
+                    self?.displayFilteredImage(imageToDisplay: photoFilterCIImage)
+                }
             }
-        }
-        
-        let filter3Action = UIAlertAction(title: "Scale Filter", style: .default) {[weak self] (action) in
-            if let scaledCIImage = self?.scaleFilter(),
-               let imageToEdit = self?.previewImage {
-                let capturedImage = UIImage(ciImage: scaledCIImage, scale: imageToEdit.scale, orientation: imageToEdit.imageOrientation)
-                self?.previewImageView.image = capturedImage.fixOrientation()
-            }
+            colorFilterMenu.addAction(sepiaFilterAction)
+            colorFilterMenu.addAction(photoFilterAction)
+            self?.presentAlertController(colorFilterMenu)
         }
         
-        let blurAction = UIAlertAction(title: "Blur Filter", style: .default) { (action) in
-           self.blurFilter()
+        let bloomFilterAction = UIAlertAction(title: "Bloom Filter", style: .default) {[weak self] (action) in
+            if let imageInCIFormat = self?.convertToCIImage(),
+               let bloomCIImage = self?.bloomFilter(imageInCIFormat, intensity: 1, radius: 3) {
+                self?.displayFilteredImage(imageToDisplay: bloomCIImage)
+            }
+        }
+        let scaleFilterAction = UIAlertAction(title: "Scale Filter", style: .default) {[weak self] (action) in
+            if let scaledCIImage = self?.scaleFilter() {
+                self?.displayFilteredImage(imageToDisplay: scaledCIImage)
+            }
+        }
+        let blurFilterAction = UIAlertAction(title: "Blur Filters", style: .default) {[weak self] (action) in
+            let blurFilterMenu = UIAlertController(title: "Types of Blur", message: "", preferredStyle: .actionSheet)
+            let rectangularBlurAction = UIAlertAction(title: "Rectangular Blur", style: .default) { (action) in
+                if let blurredImage = self?.blurFilter() {
+                    self?.displayFilteredImage(imageToDisplay: blurredImage)
+                }
+            }
+            let discBlurAction = UIAlertAction(title: "Disc Blur", style: .default) {[weak self] (action) in
+                if let discBlurredImage = self?.discFilter() {
+                    self?.displayFilteredImage(imageToDisplay: discBlurredImage)
+                }
+            }
+            blurFilterMenu.addAction(rectangularBlurAction)
+            blurFilterMenu.addAction(discBlurAction)
+            self?.presentAlertController(blurFilterMenu)
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-        filterMenu.addAction(filter1Action)
-        filterMenu.addAction(filter2Action)
-        filterMenu.addAction(filter3Action)
-        filterMenu.addAction(blurAction)
+        filterMenu.addAction(colorFilterAction)
+        filterMenu.addAction(bloomFilterAction)
+        filterMenu.addAction(scaleFilterAction)
+        filterMenu.addAction(blurFilterAction)
         filterMenu.addAction(cancelAction)
+        presentAlertController(filterMenu)
+        
+    }
     
+    func presentAlertController(_ menuToPresent: UIAlertController) {
         if UIDevice.current.userInterfaceIdiom == .pad {
-            if let popoverPresentationController = filterMenu.popoverPresentationController {
+            if let popoverPresentationController = menuToPresent.popoverPresentationController {
                 popoverPresentationController.permittedArrowDirections = .up
                 popoverPresentationController.sourceView = self.view
                 popoverPresentationController.sourceRect = CGRect(x: self.view.frame.maxX-50, y: self.view.frame.minY+25, width: 30, height: 30)
-                //popoverPresentationController.delegate = self
-                filterMenu.modalPresentationStyle = .popover
-                present(filterMenu, animated: true, completion: nil)
+                menuToPresent.modalPresentationStyle = .popover
+                present(menuToPresent, animated: true, completion: nil)
             }
         } else {
-            present(filterMenu, animated: true, completion: nil)
+            present(menuToPresent, animated: true, completion: nil)
+        }
+    }
+    
+    func convertToCIImage()->CIImage?
+    {
+        if let imageToEdit = previewImage {
+           let originalCIImage = CIImage(image: imageToEdit)
+            return originalCIImage
+        }
+        return nil
+    }
+    
+    func displayFilteredImage(imageToDisplay : CIImage?){
+        if let imageToEdit = previewImage,
+         let imageToBeDisplayed = imageToDisplay {
+            let capturedImage = UIImage(ciImage: imageToBeDisplayed, scale: imageToEdit.scale, orientation: imageToEdit.imageOrientation)
+            previewImageView.image = capturedImage.fixOrientation()
         }
     }
     
@@ -128,6 +161,12 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         sepiaFilter?.setValue(input, forKey: kCIInputImageKey)
         sepiaFilter?.setValue(intensity, forKey: kCIInputIntensityKey)
         return sepiaFilter?.outputImage
+    }
+    
+    func photoEffectFilter(_ input:CIImage) -> CIImage? {
+        let photoFilter = CIFilter(name:"CIPhotoEffectTransfer")
+        photoFilter?.setValue(input, forKey: kCIInputImageKey)
+        return photoFilter?.outputImage
     }
     
     func bloomFilter(_ input:CIImage, intensity: Double, radius: Double) -> CIImage?
@@ -146,24 +185,34 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
             let scaleFilter = CIFilter(name:"CILanczosScaleTransform")!
             scaleFilter.setValue(originalCIImage, forKey: kCIInputImageKey)
             scaleFilter.setValue(1, forKey: kCIInputScaleKey)
-            scaleFilter.setValue(0.5 * aspectRatio, forKey: kCIInputAspectRatioKey)
+            scaleFilter.setValue(aspectRatio, forKey: kCIInputAspectRatioKey)
             return scaleFilter.outputImage!
         }
         return nil
     }
     
-    func blurFilter()
+    func blurFilter() -> CIImage?
     {
         if let imageToEdit = previewImage {
             let originalCIImage = CIImage(image:imageToEdit)
             let blurFilter = CIFilter(name:"CIBoxBlur")
             blurFilter?.setValue(originalCIImage, forKey: kCIInputImageKey)
             blurFilter?.setValue(5, forKey: kCIInputRadiusKey)
-            if let outputImage = blurFilter?.outputImage {
-                let capturedImage = UIImage(ciImage: outputImage, scale: imageToEdit.scale, orientation: imageToEdit.imageOrientation)
-                previewImageView.image = capturedImage.fixOrientation()
-            }
+            return blurFilter?.outputImage!
         }
+        return nil
+    }
+    
+    func discFilter() -> CIImage?
+    {
+        if let imageToEdit = previewImage {
+            let originalCIImage = CIImage(image:imageToEdit)
+            let discFilter = CIFilter(name:"CIDiscBlur")
+            discFilter?.setValue(originalCIImage, forKey: kCIInputImageKey)
+            discFilter?.setValue(5, forKey: kCIInputRadiusKey)
+            return discFilter?.outputImage!
+        }
+        return nil
     }
 }
 
@@ -177,6 +226,9 @@ extension PreviewScreenViewController: UIGestureRecognizerDelegate {
     }
 }
 
+// MARK: -
+// MARK: Fixing the orientation
+// MARK: -
 extension UIImage {
     func fixOrientation() -> UIImage {
         if self.imageOrientation == UIImage.Orientation.up {
