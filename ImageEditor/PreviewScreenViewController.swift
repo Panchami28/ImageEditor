@@ -14,6 +14,8 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var previewImageView: UIImageView!
     @IBOutlet var imageViewDoubleTapGestureRecognizer: UITapGestureRecognizer!
     @IBOutlet var imageViewTripleTapGestureRecognizer: UITapGestureRecognizer!
+    @IBOutlet weak var addToGalleryButton: UIButton!
+    @IBOutlet weak var addToGalleryButtonContainer: UIView!
     
     var previewImage: UIImage?
     var requiredAsset: PHAsset?
@@ -26,6 +28,8 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         imageScrollView.delegate = self
         imageViewDoubleTapGestureRecognizer.delegate = self
         imageViewTripleTapGestureRecognizer.delegate = self
+        addToGalleryButton.isHidden = true
+        addToGalleryButtonContainer.isHidden = true
     }
     
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
@@ -58,11 +62,15 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
 //MARK: -
     @IBAction func addToGalleryButtonClicked(_ sender: UIButton) {
         if let imageToSave = previewImageView.image {
-            UIImageWriteToSavedPhotosAlbum(imageToSave, self, #selector(addImageToLibrary(_:didFinishSavingWithError:contextInfo:)), nil)
+            UIImageWriteToSavedPhotosAlbum(imageToSave, self, #selector(addedImageToLibrary(_:didFinishSavingWithError:contextInfo:)), nil)
         }
+        addToGalleryButton.isHidden = true
+        addToGalleryButtonContainer.isHidden = true
+        //loadImage()
     }
     
-    @objc func addImageToLibrary(_ image: UIImage,didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+    
+    @objc func addedImageToLibrary(_ image: UIImage,didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
             if let error = error {
                 // we got back an error!
                 let ac = UIAlertController(title: "Save error", message: error.localizedDescription, preferredStyle: .alert)
@@ -182,6 +190,8 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
          let imageToBeDisplayed = imageToDisplay {
             let capturedImage = UIImage(ciImage: imageToBeDisplayed, scale: imageToEdit.scale, orientation: imageToEdit.imageOrientation)
             previewImageView.image = capturedImage.fixOrientation()
+            addToGalleryButton.isHidden = false
+            addToGalleryButtonContainer.isHidden = false
         }
     }
 //MARK: -

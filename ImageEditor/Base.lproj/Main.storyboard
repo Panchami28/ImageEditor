@@ -51,6 +51,17 @@
                                     <action selector="choosePhotoButtonClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="P0G-Bg-ATs"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wsy-QP-rk8">
+                                <rect key="frame" x="65" y="162" width="289" height="151"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="151" id="dzn-CT-xfw"/>
+                                    <constraint firstAttribute="width" constant="289" id="pHY-ad-fkv"/>
+                                </constraints>
+                                <string key="text">This app allows users to apply various types of filters on the image from the user's gallery or allows the users to capture a photo and apply filters on captured image</string>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -58,7 +69,9 @@
                             <constraint firstItem="1Az-fs-8Kx" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="5ae-d5-0ra"/>
                             <constraint firstItem="Cup-8n-bzi" firstAttribute="top" secondItem="1Az-fs-8Kx" secondAttribute="bottom" constant="39" id="GgL-Ub-hBw"/>
                             <constraint firstItem="Cup-8n-bzi" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="ViH-Ue-OV8"/>
+                            <constraint firstItem="1Az-fs-8Kx" firstAttribute="top" secondItem="Wsy-QP-rk8" secondAttribute="bottom" constant="39" id="nFd-2L-jxh"/>
                             <constraint firstItem="Cup-8n-bzi" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="q9H-Lw-a3p"/>
+                            <constraint firstItem="Wsy-QP-rk8" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="sKh-fA-Fm9"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="hmB-32-qPw"/>
@@ -87,10 +100,12 @@
                                         </connections>
                                     </imageView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n8L-eg-DI8" userLabel="Label Holder View">
-                                        <rect key="frame" x="0.0" y="762" width="414" height="56"/>
+                                        <rect key="frame" x="0.0" y="752" width="414" height="66"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AH7-Fy-7eD">
-                                                <rect key="frame" x="159.66666666666666" y="13" width="95" height="30"/>
+                                                <rect key="frame" x="124" y="6" width="166" height="54"/>
+                                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
+                                                <inset key="contentEdgeInsets" minX="15" minY="15" maxX="15" maxY="15"/>
                                                 <state key="normal" title="Add to gallery">
                                                     <color key="titleColor" systemColor="secondarySystemGroupedBackgroundColor"/>
                                                 </state>
@@ -102,7 +117,7 @@
                                         <color key="backgroundColor" red="0.010370399746192915" green="0.0053791430976146051" blue="0.0077695303832305777" alpha="0.32579730308219179" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstItem="AH7-Fy-7eD" firstAttribute="centerY" secondItem="n8L-eg-DI8" secondAttribute="centerY" id="Jc6-ay-b37"/>
-                                            <constraint firstAttribute="height" constant="56" id="W4K-MQ-Aov"/>
+                                            <constraint firstAttribute="height" constant="66" id="W4K-MQ-Aov"/>
                                             <constraint firstItem="AH7-Fy-7eD" firstAttribute="centerX" secondItem="n8L-eg-DI8" secondAttribute="centerX" id="yGb-f4-k2Y"/>
                                         </constraints>
                                     </view>
@@ -132,6 +147,8 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="addToGalleryButton" destination="AH7-Fy-7eD" id="Mad-MK-7ye"/>
+                        <outlet property="addToGalleryButtonContainer" destination="n8L-eg-DI8" id="uYK-Nc-ENx"/>
                         <outlet property="imageScrollView" destination="wGz-x2-t94" id="Zxx-0I-kaM"/>
                         <outlet property="imageViewDoubleTapGestureRecognizer" destination="xqI-1O-oYT" id="7Ez-zJ-8l4"/>
                         <outlet property="imageViewTripleTapGestureRecognizer" destination="pLg-Si-tns" id="q8E-5n-zf8"/>

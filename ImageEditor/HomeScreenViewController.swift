@@ -39,7 +39,7 @@ class HomeScreenViewController: UIViewController,UIImagePickerControllerDelegate
         dismiss(animated: true) {
             if let img = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
                 if self.myImagePickerVC.optionType == .camera {
-                    UIImageWriteToSavedPhotosAlbum(img, self, #selector(self.addImageToLibrary(_:didFinishSavingWithError:contextInfo:)), nil)
+                    UIImageWriteToSavedPhotosAlbum(img, self, #selector(self.addedImageToLibrary(_:didFinishSavingWithError:contextInfo:)), nil)
                 }
                 self.loadData(image: img)
             }
@@ -57,7 +57,7 @@ class HomeScreenViewController: UIViewController,UIImagePickerControllerDelegate
     //MARK: -
     //MARK: - Add image to Library
     //MARK: -
-    @objc func addImageToLibrary(_ image: UIImage,didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+    @objc func addedImageToLibrary(_ image: UIImage,didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
             if let error = error {
                 // we got back an error!
                 let ac = UIAlertController(title: "Save error", message: error.localizedDescription, preferredStyle: .alert)
