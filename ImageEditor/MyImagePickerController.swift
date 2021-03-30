@@ -7,14 +7,21 @@
 
 import UIKit
 
+enum typeOfOption {
+    case camera
+    case gallery
+}
+
 class MyImagePickerController: UIImagePickerController {
     
-    static func instantiate() -> MyImagePickerController {
-        let myImagePickerVC = MyImagePickerController()
-        myImagePickerVC.sourceType = .camera
-        myImagePickerVC.showsCameraControls = true
-        myImagePickerVC.allowsEditing = false
-        return myImagePickerVC
+    var optionType: typeOfOption = .camera
+    
+    func instantiate() {
+        switch optionType {
+        case .camera: sourceType = .camera
+            showsCameraControls = true
+        case .gallery: sourceType = .photoLibrary
+        }
     }
 
     override func viewDidLoad() {
