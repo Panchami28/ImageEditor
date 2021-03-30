@@ -16,6 +16,7 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet var imageViewTripleTapGestureRecognizer: UITapGestureRecognizer!
     @IBOutlet weak var addToGalleryButton: UIButton!
     @IBOutlet weak var addToGalleryButtonContainer: UIView!
+    @IBOutlet weak var intensitySlider: UISlider!
     
     var previewImage: UIImage?
     var requiredAsset: PHAsset?
@@ -30,6 +31,9 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         imageViewTripleTapGestureRecognizer.delegate = self
         addToGalleryButton.isHidden = true
         addToGalleryButtonContainer.isHidden = true
+        intensitySlider.isHidden = true
+        let panGesture = UIPanGestureRecognizer(target: self, action:  #selector(panGesture(gesture:)))
+            self.intensitySlider.addGestureRecognizer(panGesture)
     }
     
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
@@ -57,6 +61,13 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
             }
     }
     
+    @IBAction func sliderValueChanged(_ sender: UISlider) {
+        if let imageInCIFormat = convertToCIImage(),
+           let bloomCIImage = bloomFilter(imageInCIFormat, intensity: Double(intensitySlider.value), radius: 3) {
+           displayFilteredImage(imageToDisplay: bloomCIImage)
+        }
+    }
+    
 //MARK: -
 //MARK: - Add image to Library
 //MARK: -
@@ -68,7 +79,39 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         addToGalleryButtonContainer.isHidden = true
         //loadImage()
     }
-    
+    //    private func photoAuthorization() {
+    //        let status = PHPhotoLibrary.authorizationStatus()
+    //        switch status {
+    //          case .authorized:
+    //              loadImage()
+    //        case .restricted, .denied:
+    //                print("Photo Auth restricted or denied")
+    //        case .restricted, .denied:
+    //                        print("Photo Auth restricted or denied")
+    //        case .notDetermined: break
+    //        @unknown default: break
+    //        }
+    //    }
+    //
+    //    func loadImage() {
+    //        let manager = PHImageManager.default()
+    //        let fetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions())
+    //        manager.requestImage(for: fetchResult.object(at: 0), targetSize: CGSize(width: 647, height: 375), contentMode: .aspectFill, options: requestOptions()) { img, err  in
+    //            guard let img = img else { return }
+    //            self.previewImageView.image = img
+    //        }
+    //    }
+    //    private func fetchOptions() -> PHFetchOptions {
+    //        let fetchOptions = PHFetchOptions()
+    //        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+    //        return fetchOptions
+    //    }
+    //    private func requestOptions() -> PHImageRequestOptions {
+    //        let requestOptions = PHImageRequestOptions()
+    //        requestOptions.isSynchronous = true
+    //        requestOptions.deliveryMode = .highQualityFormat
+    //        return requestOptions
+    //    }
     
     @objc func addedImageToLibrary(_ image: UIImage,didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
             if let error = error {
@@ -94,6 +137,14 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         zoomRect.origin.y = center.y - ((zoomRect.size.height)/2)
         return zoomRect
     }
+    @objc func panGesture(gesture:UIPanGestureRecognizer){
+         let currentPoint = gesture.location(in: intensitySlider)
+         let percentage = currentPoint.x/intensitySlider.bounds.size.width;
+         let delta = Float(percentage) *  (intensitySlider.maximumValue - intensitySlider.minimumValue)
+         let value = intensitySlider.minimumValue + delta
+        intensitySlider.setValue(value, animated: true)
+    }
+
     
     
     @objc private func addFilterButtonClicked() {
@@ -120,6 +171,7 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         let styleFilterAction = UIAlertAction(title: "Style Filters", style: .default) { [weak self] (action) in
             let styleFilterMenu = UIAlertController(title: "", message: "Choose required Style Filter", preferredStyle: .actionSheet)
             let bloomFilterAction = UIAlertAction(title: "Bloom Filter", style: .default) {[weak self] (action) in
+                self?.intensitySlider.isHidden = false
                 if let imageInCIFormat = self?.convertToCIImage(),
                    let bloomCIImage = self?.bloomFilter(imageInCIFormat, intensity: 3, radius: 3) {
                     self?.displayFilteredImage(imageToDisplay: bloomCIImage)
@@ -176,8 +228,7 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    func convertToCIImage()->CIImage?
-    {
+    func convertToCIImage()->CIImage? {
         if let imageToEdit = previewImage {
            let originalCIImage = CIImage(image: imageToEdit)
             return originalCIImage
@@ -185,7 +236,7 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         return nil
     }
     
-    func displayFilteredImage(imageToDisplay : CIImage?){
+    func displayFilteredImage(imageToDisplay : CIImage?) {
         if let imageToEdit = previewImage,
          let imageToBeDisplayed = imageToDisplay {
             let capturedImage = UIImage(ciImage: imageToBeDisplayed, scale: imageToEdit.scale, orientation: imageToEdit.imageOrientation)
@@ -194,12 +245,13 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
             addToGalleryButtonContainer.isHidden = false
         }
     }
+    
+    
 //MARK: -
 //MARK: - Filter Methods
 //MARK: -
     
-    func sepiaFilter(_ input: CIImage, intensity: Double) -> CIImage?
-    {
+    func sepiaFilter(_ input: CIImage, intensity: Double) -> CIImage? {
         let sepiaFilter = CIFilter(name:"CISepiaTone")
         sepiaFilter?.setValue(input, forKey: kCIInputImageKey)
         sepiaFilter?.setValue(intensity, forKey: kCIInputIntensityKey)
@@ -228,8 +280,7 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         return gloomFilter?.outputImage
     }
     
-    func blurFilter() -> CIImage?
-    {
+    func blurFilter() -> CIImage? {
         if let imageToEdit = previewImage {
             let originalCIImage = CIImage(image:imageToEdit)
             let blurFilter = CIFilter(name:"CIBoxBlur")
@@ -240,8 +291,7 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         return nil
     }
     
-    func discFilter() -> CIImage?
-    {
+    func discFilter() -> CIImage? {
         if let imageToEdit = previewImage {
             let originalCIImage = CIImage(image:imageToEdit)
             let discFilter = CIFilter(name:"CIDiscBlur")
