@@ -16,10 +16,9 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet var imageViewTripleTapGestureRecognizer: UITapGestureRecognizer!
     @IBOutlet weak var addToGalleryButton: UIButton!
     @IBOutlet weak var addToGalleryButtonContainer: UIView!
-    @IBOutlet weak var intensitySlider: UISlider!
+    @IBOutlet weak var bloomIntensitySlider: UISlider!
     
     var previewImage: UIImage?
-    var requiredAsset: PHAsset?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,9 +30,9 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         imageViewTripleTapGestureRecognizer.delegate = self
         addToGalleryButton.isHidden = true
         addToGalleryButtonContainer.isHidden = true
-        intensitySlider.isHidden = true
+        bloomIntensitySlider.isHidden = true
         let panGesture = UIPanGestureRecognizer(target: self, action:  #selector(panGesture(gesture:)))
-            self.intensitySlider.addGestureRecognizer(panGesture)
+        self.bloomIntensitySlider.addGestureRecognizer(panGesture)
     }
     
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
@@ -63,9 +62,10 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
     
     @IBAction func sliderValueChanged(_ sender: UISlider) {
         if let imageInCIFormat = convertToCIImage(),
-           let bloomCIImage = bloomFilter(imageInCIFormat, intensity: Double(intensitySlider.value), radius: 3) {
+           let bloomCIImage = bloomFilter(imageInCIFormat, intensity: Double(bloomIntensitySlider.value), radius: 3) {
            displayFilteredImage(imageToDisplay: bloomCIImage)
         }
+        //print("This method called")
     }
     
 //MARK: -
@@ -77,41 +77,7 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         }
         addToGalleryButton.isHidden = true
         addToGalleryButtonContainer.isHidden = true
-        //loadImage()
     }
-    //    private func photoAuthorization() {
-    //        let status = PHPhotoLibrary.authorizationStatus()
-    //        switch status {
-    //          case .authorized:
-    //              loadImage()
-    //        case .restricted, .denied:
-    //                print("Photo Auth restricted or denied")
-    //        case .restricted, .denied:
-    //                        print("Photo Auth restricted or denied")
-    //        case .notDetermined: break
-    //        @unknown default: break
-    //        }
-    //    }
-    //
-    //    func loadImage() {
-    //        let manager = PHImageManager.default()
-    //        let fetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions())
-    //        manager.requestImage(for: fetchResult.object(at: 0), targetSize: CGSize(width: 647, height: 375), contentMode: .aspectFill, options: requestOptions()) { img, err  in
-    //            guard let img = img else { return }
-    //            self.previewImageView.image = img
-    //        }
-    //    }
-    //    private func fetchOptions() -> PHFetchOptions {
-    //        let fetchOptions = PHFetchOptions()
-    //        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-    //        return fetchOptions
-    //    }
-    //    private func requestOptions() -> PHImageRequestOptions {
-    //        let requestOptions = PHImageRequestOptions()
-    //        requestOptions.isSynchronous = true
-    //        requestOptions.deliveryMode = .highQualityFormat
-    //        return requestOptions
-    //    }
     
     @objc func addedImageToLibrary(_ image: UIImage,didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
             if let error = error {
@@ -138,11 +104,20 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         return zoomRect
     }
     @objc func panGesture(gesture:UIPanGestureRecognizer){
-         let currentPoint = gesture.location(in: intensitySlider)
-         let percentage = currentPoint.x/intensitySlider.bounds.size.width;
-         let delta = Float(percentage) *  (intensitySlider.maximumValue - intensitySlider.minimumValue)
-         let value = intensitySlider.minimumValue + delta
-        intensitySlider.setValue(value, animated: true)
+         let currentPoint = gesture.location(in: bloomIntensitySlider)
+         let percentage = currentPoint.x/bloomIntensitySlider.bounds.size.width
+         let delta = Float(percentage) *  (bloomIntensitySlider.maximumValue - bloomIntensitySlider.minimumValue)
+         let value = bloomIntensitySlider.minimumValue + delta
+        bloomIntensitySlider.setValue(value, animated: true)
+        if let imageInCIFormat = convertToCIImage(),
+           let bloomCIImage = bloomFilter(imageInCIFormat, intensity: Double(bloomIntensitySlider.value), radius: 3) {
+           displayFilteredImage(imageToDisplay: bloomCIImage)
+        }
+        print("X point:\(currentPoint.x)")
+        print("Width of intensitySlider:\(bloomIntensitySlider.bounds.size.width)")
+        print("Percentage:\(percentage)")
+        print("Delta:\(delta)")
+        print("Difference:\(bloomIntensitySlider.maximumValue - bloomIntensitySlider.minimumValue)")
     }
 
     
@@ -171,7 +146,7 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         let styleFilterAction = UIAlertAction(title: "Style Filters", style: .default) { [weak self] (action) in
             let styleFilterMenu = UIAlertController(title: "", message: "Choose required Style Filter", preferredStyle: .actionSheet)
             let bloomFilterAction = UIAlertAction(title: "Bloom Filter", style: .default) {[weak self] (action) in
-                self?.intensitySlider.isHidden = false
+                self?.bloomIntensitySlider.isHidden = false
                 if let imageInCIFormat = self?.convertToCIImage(),
                    let bloomCIImage = self?.bloomFilter(imageInCIFormat, intensity: 3, radius: 3) {
                     self?.displayFilteredImage(imageToDisplay: bloomCIImage)
