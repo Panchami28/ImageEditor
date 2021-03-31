@@ -158,10 +158,10 @@
                     <connections>
                         <outlet property="addToGalleryButton" destination="AH7-Fy-7eD" id="Mad-MK-7ye"/>
                         <outlet property="addToGalleryButtonContainer" destination="n8L-eg-DI8" id="uYK-Nc-ENx"/>
-                        <outlet property="bloomIntensitySlider" destination="bay-Vc-xvj" id="CAx-bG-eTW"/>
                         <outlet property="imageScrollView" destination="wGz-x2-t94" id="Zxx-0I-kaM"/>
                         <outlet property="imageViewDoubleTapGestureRecognizer" destination="xqI-1O-oYT" id="7Ez-zJ-8l4"/>
                         <outlet property="imageViewTripleTapGestureRecognizer" destination="pLg-Si-tns" id="q8E-5n-zf8"/>
+                        <outlet property="intensitySlider" destination="bay-Vc-xvj" id="CAx-bG-eTW"/>
                         <outlet property="previewImageView" destination="Rk6-KB-ycb" id="z4N-UB-bcs"/>
                     </connections>
                 </viewController>

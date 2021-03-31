@@ -10,16 +10,22 @@ import AVFoundation
 import Photos
 
 class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
+    
+// MARK: -
+// MARK: IB Outlets
+// MARK: -
     @IBOutlet weak var imageScrollView: UIScrollView!
     @IBOutlet weak var previewImageView: UIImageView!
     @IBOutlet var imageViewDoubleTapGestureRecognizer: UITapGestureRecognizer!
     @IBOutlet var imageViewTripleTapGestureRecognizer: UITapGestureRecognizer!
     @IBOutlet weak var addToGalleryButton: UIButton!
     @IBOutlet weak var addToGalleryButtonContainer: UIView!
-    @IBOutlet weak var bloomIntensitySlider: UISlider!
+    @IBOutlet weak var intensitySlider: UISlider!
     
     var previewImage: UIImage?
+    var callingFilter = "sepia"
     var filterApplyingQueue = DispatchQueue(label: "ImageFilterQueue")
+    let imageFilterManager = ImageFilterManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,11 +37,7 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         imageViewTripleTapGestureRecognizer.delegate = self
         addToGalleryButton.isHidden = true
         addToGalleryButtonContainer.isHidden = true
-        bloomIntensitySlider.isHidden = true
-    }
-    
-    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        return previewImageView
+        updateSlider(isHidden: true)
     }
 
 // MARK: -
@@ -47,7 +49,6 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
             } else {
                 imageScrollView.setZoomScale(imageScrollView.minimumZoomScale, animated: true)
             }
-        //print("Scale values: \(imageScrollView.maximumZoomScale) \(imageScrollView.minimumZoomScale)")
     }
     
     
@@ -60,12 +61,23 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @IBAction func sliderValueChanged(_ sender: UISlider) {
-        let changedIntensityValue = bloomIntensitySlider.value
+        let changedIntensityValue = intensitySlider.value
+        var filteredImage : CIImage?
         filterApplyingQueue.async { [weak self] in
-            let bloomCIImage = self?.bloomFilter(intensity: Double(changedIntensityValue), radius: 3)
-        DispatchQueue.main.async {
-            self?.displayFilteredImage(imageToDisplay: bloomCIImage)
-        }
+            if let inputUIImage = self?.previewImage {
+                if self?.callingFilter == "bloom" {
+                    filteredImage = self?.imageFilterManager.bloomFilter(inputUIImage, intensity: Double(changedIntensityValue), radius: 3)
+                }
+                else if self?.callingFilter == "gloom" {
+                    filteredImage = self?.imageFilterManager.gloomFilter(inputUIImage, intensity: Double(changedIntensityValue), radius: 3)
+                }
+                else if self?.callingFilter == "sepia" {
+                    filteredImage = self?.imageFilterManager.sepiaFilter(inputUIImage, intensity: Double(changedIntensityValue))
+                }
+                DispatchQueue.main.async {
+                    self?.displayFilteredImage(imageToDisplay: filteredImage)
+                }
+            }
         }
     }
     
@@ -92,6 +104,12 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
                 present(ac, animated: true)
             }
         }
+// MARK: -
+// MARK: Delegate Method for zooming on pinch
+// MARK: -
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return previewImageView
+    }
     
 // MARK: -
 // MARK: Private Methods
@@ -110,14 +128,17 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         let colorFilterAction = UIAlertAction(title: "Color Filters", style: .default) { [weak self] (action) in
             let colorFilterMenu = UIAlertController(title: "", message: "Choose required Color Filter", preferredStyle: .actionSheet)
             let sepiaFilterAction = UIAlertAction(title: "Sepia Filter", style: .default) {[weak self] (action) in
-                if let imageInCIFormat = self?.convertToCIImage(),
-                   let sepiaCIImage = self?.sepiaFilter(imageInCIFormat, intensity:0.9) {
+                self?.updateSlider(isHidden: false)
+                self?.callingFilter = "sepia"
+                if let inputUIImage = self?.previewImage,
+                let sepiaCIImage = self?.imageFilterManager.sepiaFilter(inputUIImage, intensity:Double(self?.intensitySlider.value ?? 0)) {
                     self?.displayFilteredImage(imageToDisplay: sepiaCIImage)
                 }
             }
             let photoFilterAction = UIAlertAction(title: "Photo Effect Transfer Filter", style: .default) { [weak self] (action) in
-                if let imageInCIFormat = self?.convertToCIImage(),
-                   let photoFilterCIImage = self?.photoEffectFilter(imageInCIFormat) {
+                self?.updateSlider(isHidden: true)
+                if let inputUIImage = self?.previewImage,
+                   let photoFilterCIImage = self?.imageFilterManager.photoEffectFilter(inputUIImage) {
                     self?.displayFilteredImage(imageToDisplay: photoFilterCIImage)
                 }
             }
@@ -129,14 +150,17 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         let styleFilterAction = UIAlertAction(title: "Style Filters", style: .default) { [weak self] (action) in
             let styleFilterMenu = UIAlertController(title: "", message: "Choose required Style Filter", preferredStyle: .actionSheet)
             let bloomFilterAction = UIAlertAction(title: "Bloom Filter", style: .default) {[weak self] (action) in
-                self?.bloomIntensitySlider.isHidden = false
-                   if let bloomCIImage = self?.bloomFilter(intensity: 3, radius: 3) {
+                self?.updateSlider(isHidden: false)
+                self?.callingFilter = "bloom"
+                if let inputUIImage = self?.previewImage,
+                   let bloomCIImage = self?.imageFilterManager.bloomFilter(inputUIImage, intensity: Double(self?.intensitySlider.value ?? 0), radius: 3) {
                     self?.displayFilteredImage(imageToDisplay: bloomCIImage)
                 }
             }
             let gloomFilterAction = UIAlertAction(title: "Gloom Filter", style: .default) {[weak self] (action) in
-                if let imageInCIFormat = self?.convertToCIImage(),
-                   let gloomCIImage = self?.gloomFilter(imageInCIFormat, intensity: 3, radius: 3) {
+                self?.callingFilter = "gloom"
+                if let inputUIImage = self?.previewImage,
+                   let gloomCIImage = self?.imageFilterManager.gloomFilter(inputUIImage, intensity: Double(self?.intensitySlider.value ?? 0), radius: 3) {
                     self?.displayFilteredImage(imageToDisplay: gloomCIImage)
                 }
             }
@@ -146,15 +170,18 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         }
         
         let blurFilterAction = UIAlertAction(title: "Blur Filters", style: .default) {[weak self] (action) in
+            self?.updateSlider(isHidden: true)
             let blurFilterMenu = UIAlertController(title: "", message: "Choose required Blur Filter", preferredStyle: .actionSheet)
-            let rectangularBlurAction = UIAlertAction(title: "Rectangular Blur", style: .default) { (action) in
-                if let blurredImage = self?.rectangularBlurFilter() {
+            let rectangularBlurAction = UIAlertAction(title: "Rectangular Blur", style: .default) {(action) in
+                if let inputUIImage = self?.previewImage,
+                   let blurredImage = self?.imageFilterManager.rectangularBlurFilter(inputUIImage) {
                     self?.displayFilteredImage(imageToDisplay: blurredImage)
                 }
             }
             let discBlurAction = UIAlertAction(title: "Disc Blur", style: .default) {[weak self] (action) in
-                if let discBlurredImage = self?.discBlurFilter() {
-                    self?.displayFilteredImage(imageToDisplay: discBlurredImage)
+                if let inputUIImage = self?.previewImage,
+                   let blurredImage = self?.imageFilterManager.discBlurFilter(inputUIImage) {
+                    self?.displayFilteredImage(imageToDisplay: blurredImage)
                 }
             }
             blurFilterMenu.addAction(rectangularBlurAction)
@@ -185,17 +212,9 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    func convertToCIImage()->CIImage? {
-        if let imageToEdit = previewImage {
-           let originalCIImage = CIImage(image: imageToEdit)
-            return originalCIImage
-        }
-        return nil
-    }
-    
     func displayFilteredImage(imageToDisplay : CIImage?) {
         if let imageToEdit = previewImage,
-         let imageToBeDisplayed = imageToDisplay {
+           let imageToBeDisplayed = imageToDisplay {
             let capturedImage = UIImage(ciImage: imageToBeDisplayed, scale: imageToEdit.scale, orientation: imageToEdit.imageOrientation)
             previewImageView.image = capturedImage.fixOrientation()
             addToGalleryButton.isHidden = false
@@ -203,62 +222,11 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    
-//MARK: -
-//MARK: - Filter Methods
-//MARK: -
-    
-    func sepiaFilter(_ input: CIImage, intensity: Double) -> CIImage? {
-        let sepiaFilter = CIFilter(name:"CISepiaTone")
-        sepiaFilter?.setValue(input, forKey: kCIInputImageKey)
-        sepiaFilter?.setValue(intensity, forKey: kCIInputIntensityKey)
-        return sepiaFilter?.outputImage
-    }
-    
-    func photoEffectFilter(_ input:CIImage) -> CIImage? {
-        let photoFilter = CIFilter(name:"CIPhotoEffectTransfer")
-        photoFilter?.setValue(input, forKey: kCIInputImageKey)
-        return photoFilter?.outputImage
-    }
-    
-    func bloomFilter(intensity: Double, radius: Double) -> CIImage? {
-        let bloomFilter = CIFilter(name:"CIBloom")
-        if let input = convertToCIImage() {
-            bloomFilter?.setValue(input, forKey: kCIInputImageKey)
+    func updateSlider(isHidden value: Bool) {
+        switch value {
+        case true : intensitySlider.isHidden = true
+        case false : intensitySlider.isHidden = false
         }
-        bloomFilter?.setValue(intensity, forKey: kCIInputIntensityKey)
-        bloomFilter?.setValue(radius, forKey: kCIInputRadiusKey)
-        return bloomFilter?.outputImage
-    }
-    
-    func gloomFilter(_ input:CIImage, intensity: Double, radius: Double) -> CIImage? {
-        let gloomFilter = CIFilter(name:"CIGloom")
-        gloomFilter?.setValue(input, forKey: kCIInputImageKey)
-        gloomFilter?.setValue(intensity, forKey: kCIInputIntensityKey)
-        gloomFilter?.setValue(radius, forKey: kCIInputRadiusKey)
-        return gloomFilter?.outputImage
-    }
-    
-    func rectangularBlurFilter() -> CIImage? {
-        if let imageToEdit = previewImage {
-            let originalCIImage = CIImage(image:imageToEdit)
-            let blurFilter = CIFilter(name:"CIBoxBlur")
-            blurFilter?.setValue(originalCIImage, forKey: kCIInputImageKey)
-            blurFilter?.setValue(5, forKey: kCIInputRadiusKey)
-            return blurFilter?.outputImage!
-        }
-        return nil
-    }
-    
-    func discBlurFilter() -> CIImage? {
-        if let imageToEdit = previewImage {
-            let originalCIImage = CIImage(image:imageToEdit)
-            let discFilter = CIFilter(name:"CIDiscBlur")
-            discFilter?.setValue(originalCIImage, forKey: kCIInputImageKey)
-            discFilter?.setValue(5, forKey: kCIInputRadiusKey)
-            return discFilter?.outputImage!
-        }
-        return nil
     }
 }
 
@@ -286,6 +254,5 @@ extension UIImage {
         UIGraphicsEndImageContext()
         return normalizedImage;
     }
-
 }
 

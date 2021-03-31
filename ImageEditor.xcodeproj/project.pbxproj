@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2042342226145C700064B6B4 /* ImageFilterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2042342126145C700064B6B4 /* ImageFilterManager.swift */; };
 		2098C1F52609B6190077846F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2098C1F42609B6190077846F /* AppDelegate.swift */; };
 		2098C1F72609B6190077846F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2098C1F62609B6190077846F /* SceneDelegate.swift */; };
 		2098C1FC2609B6190077846F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2098C1FA2609B6190077846F /* Main.storyboard */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2042342126145C700064B6B4 /* ImageFilterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFilterManager.swift; sourceTree = "<group>"; };
 		2098C1F12609B6190077846F /* ImageEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2098C1F42609B6190077846F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2098C1F62609B6190077846F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -72,6 +74,7 @@
 				2098C20F2609BCED0077846F /* HomeScreenViewController.swift */,
 				2098C2202609EEC50077846F /* PreviewScreenViewController.swift */,
 				2098C21C2609CA6A0077846F /* MyImagePickerController.swift */,
+				2042342126145C700064B6B4 /* ImageFilterManager.swift */,
 				2098C1FA2609B6190077846F /* Main.storyboard */,
 				2098C1FD2609B61D0077846F /* Assets.xcassets */,
 				2098C1FF2609B61D0077846F /* LaunchScreen.storyboard */,
@@ -194,6 +197,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2098C2212609EEC50077846F /* PreviewScreenViewController.swift in Sources */,
+				2042342226145C700064B6B4 /* ImageFilterManager.swift in Sources */,
 				2098C1F52609B6190077846F /* AppDelegate.swift in Sources */,
 				2098C1F72609B6190077846F /* SceneDelegate.swift in Sources */,
 				2098C2102609BCED0077846F /* HomeScreenViewController.swift in Sources */,
