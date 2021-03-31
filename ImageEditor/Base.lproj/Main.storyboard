@@ -84,14 +84,14 @@
         <scene sceneID="ggX-g9-ejV">
             <objects>
                 <viewController storyboardIdentifier="PreviewScreenViewController" id="1Nk-eS-mxF" customClass="PreviewScreenViewController" customModule="ImageEditor" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" ambiguous="YES" id="ly9-i1-7tR">
+                    <view key="view" contentMode="scaleToFill" id="ly9-i1-7tR">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" contentInsetAdjustmentBehavior="never" maximumZoomScale="4" translatesAutoresizingMaskIntoConstraints="NO" id="wGz-x2-t94">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" contentInsetAdjustmentBehavior="never" maximumZoomScale="4" translatesAutoresizingMaskIntoConstraints="NO" id="wGz-x2-t94">
                                 <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Rk6-KB-ycb">
+                                    <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Rk6-KB-ycb">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="818"/>
                                         <gestureRecognizers/>
                                         <connections>
@@ -99,16 +99,16 @@
                                             <outletCollection property="gestureRecognizers" destination="xqI-1O-oYT" appends="YES" id="GMQ-Hz-JvP"/>
                                         </connections>
                                     </imageView>
-                                    <slider opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="5" minValue="0.0" maxValue="10" translatesAutoresizingMaskIntoConstraints="NO" id="bay-Vc-xvj">
+                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="5" minValue="0.0" maxValue="10" translatesAutoresizingMaskIntoConstraints="NO" id="bay-Vc-xvj">
                                         <rect key="frame" x="148" y="687" width="118" height="31"/>
                                         <connections>
                                             <action selector="sliderValueChanged:" destination="1Nk-eS-mxF" eventType="valueChanged" id="d06-RN-agH"/>
                                         </connections>
                                     </slider>
-                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="n8L-eg-DI8" userLabel="Label Holder View">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n8L-eg-DI8" userLabel="Label Holder View">
                                         <rect key="frame" x="0.0" y="752" width="414" height="66"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AH7-Fy-7eD">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AH7-Fy-7eD">
                                                 <rect key="frame" x="124" y="6" width="166" height="54"/>
                                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
                                                 <inset key="contentEdgeInsets" minX="15" minY="15" maxX="15" maxY="15"/>
@@ -135,11 +135,11 @@
                                     <constraint firstItem="n8L-eg-DI8" firstAttribute="leading" secondItem="wGz-x2-t94" secondAttribute="leading" id="5Uv-Ql-LWm"/>
                                     <constraint firstItem="Rk6-KB-ycb" firstAttribute="height" secondItem="wGz-x2-t94" secondAttribute="height" id="6Oh-Ll-h6L"/>
                                     <constraint firstItem="Rk6-KB-ycb" firstAttribute="leading" secondItem="wGz-x2-t94" secondAttribute="leading" id="75W-IC-4Ic"/>
-                                    <constraint firstItem="bay-Vc-xvj" firstAttribute="leading" secondItem="wGz-x2-t94" secondAttribute="leading" constant="350" id="Ebh-Tu-jAP"/>
-                                    <constraint firstAttribute="trailing" secondItem="bay-Vc-xvj" secondAttribute="trailing" constant="350" id="GNp-vW-xkQ"/>
-                                    <constraint firstItem="n8L-eg-DI8" firstAttribute="top" secondItem="bay-Vc-xvj" secondAttribute="bottom" constant="35" id="JGY-Dw-Eah"/>
+                                    <constraint firstAttribute="trailing" secondItem="bay-Vc-xvj" secondAttribute="trailing" constant="150" id="7uS-md-imi"/>
+                                    <constraint firstItem="bay-Vc-xvj" firstAttribute="leading" secondItem="wGz-x2-t94" secondAttribute="leading" constant="150" id="9O1-Bs-aGt"/>
                                     <constraint firstAttribute="trailing" secondItem="n8L-eg-DI8" secondAttribute="trailing" id="Syh-Yv-BSu"/>
                                     <constraint firstItem="Rk6-KB-ycb" firstAttribute="width" secondItem="wGz-x2-t94" secondAttribute="width" id="Zjm-8F-F8Z"/>
+                                    <constraint firstItem="n8L-eg-DI8" firstAttribute="top" secondItem="bay-Vc-xvj" secondAttribute="bottom" constant="35" id="ojF-1f-xc6"/>
                                     <constraint firstItem="Rk6-KB-ycb" firstAttribute="top" secondItem="wGz-x2-t94" secondAttribute="top" id="xq4-xL-xKb"/>
                                 </constraints>
                                 <viewLayoutGuide key="contentLayoutGuide" id="0AK-C9-b9c"/>
@@ -158,10 +158,10 @@
                     <connections>
                         <outlet property="addToGalleryButton" destination="AH7-Fy-7eD" id="Mad-MK-7ye"/>
                         <outlet property="addToGalleryButtonContainer" destination="n8L-eg-DI8" id="uYK-Nc-ENx"/>
+                        <outlet property="bloomIntensitySlider" destination="bay-Vc-xvj" id="CAx-bG-eTW"/>
                         <outlet property="imageScrollView" destination="wGz-x2-t94" id="Zxx-0I-kaM"/>
                         <outlet property="imageViewDoubleTapGestureRecognizer" destination="xqI-1O-oYT" id="7Ez-zJ-8l4"/>
                         <outlet property="imageViewTripleTapGestureRecognizer" destination="pLg-Si-tns" id="q8E-5n-zf8"/>
-                        <outlet property="intensitySlider" destination="bay-Vc-xvj" id="CAx-bG-eTW"/>
                         <outlet property="previewImageView" destination="Rk6-KB-ycb" id="z4N-UB-bcs"/>
                     </connections>
                 </viewController>
