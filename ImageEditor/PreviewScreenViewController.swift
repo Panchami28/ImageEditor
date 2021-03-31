@@ -19,6 +19,7 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var bloomIntensitySlider: UISlider!
     
     var previewImage: UIImage?
+    var filterApplyingQueue = DispatchQueue(label: "ImageFilterQueue")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,8 +32,6 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         addToGalleryButton.isHidden = true
         addToGalleryButtonContainer.isHidden = true
         bloomIntensitySlider.isHidden = true
-        let panGesture = UIPanGestureRecognizer(target: self, action:  #selector(panGesture(gesture:)))
-        self.bloomIntensitySlider.addGestureRecognizer(panGesture)
     }
     
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
@@ -61,11 +60,13 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @IBAction func sliderValueChanged(_ sender: UISlider) {
-        if let imageInCIFormat = convertToCIImage(),
-           let bloomCIImage = bloomFilter(imageInCIFormat, intensity: Double(bloomIntensitySlider.value), radius: 3) {
-           displayFilteredImage(imageToDisplay: bloomCIImage)
+        let changedIntensityValue = bloomIntensitySlider.value
+        filterApplyingQueue.async { [weak self] in
+            let bloomCIImage = self?.bloomFilter(intensity: Double(changedIntensityValue), radius: 3)
+        DispatchQueue.main.async {
+            self?.displayFilteredImage(imageToDisplay: bloomCIImage)
         }
-        //print("This method called")
+        }
     }
     
 //MARK: -
@@ -103,25 +104,7 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         zoomRect.origin.y = center.y - ((zoomRect.size.height)/2)
         return zoomRect
     }
-    @objc func panGesture(gesture:UIPanGestureRecognizer){
-         let currentPoint = gesture.location(in: bloomIntensitySlider)
-         let percentage = currentPoint.x/bloomIntensitySlider.bounds.size.width
-         let delta = Float(percentage) *  (bloomIntensitySlider.maximumValue - bloomIntensitySlider.minimumValue)
-         let value = bloomIntensitySlider.minimumValue + delta
-        bloomIntensitySlider.setValue(value, animated: true)
-        if let imageInCIFormat = convertToCIImage(),
-           let bloomCIImage = bloomFilter(imageInCIFormat, intensity: Double(bloomIntensitySlider.value), radius: 3) {
-           displayFilteredImage(imageToDisplay: bloomCIImage)
-        }
-        print("X point:\(currentPoint.x)")
-        print("Width of intensitySlider:\(bloomIntensitySlider.bounds.size.width)")
-        print("Percentage:\(percentage)")
-        print("Delta:\(delta)")
-        print("Difference:\(bloomIntensitySlider.maximumValue - bloomIntensitySlider.minimumValue)")
-    }
 
-    
-    
     @objc private func addFilterButtonClicked() {
         let filterMenu = UIAlertController(title: "Filters", message: "", preferredStyle: .actionSheet)
         let colorFilterAction = UIAlertAction(title: "Color Filters", style: .default) { [weak self] (action) in
@@ -147,8 +130,7 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
             let styleFilterMenu = UIAlertController(title: "", message: "Choose required Style Filter", preferredStyle: .actionSheet)
             let bloomFilterAction = UIAlertAction(title: "Bloom Filter", style: .default) {[weak self] (action) in
                 self?.bloomIntensitySlider.isHidden = false
-                if let imageInCIFormat = self?.convertToCIImage(),
-                   let bloomCIImage = self?.bloomFilter(imageInCIFormat, intensity: 3, radius: 3) {
+                   if let bloomCIImage = self?.bloomFilter(intensity: 3, radius: 3) {
                     self?.displayFilteredImage(imageToDisplay: bloomCIImage)
                 }
             }
@@ -166,12 +148,12 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         let blurFilterAction = UIAlertAction(title: "Blur Filters", style: .default) {[weak self] (action) in
             let blurFilterMenu = UIAlertController(title: "", message: "Choose required Blur Filter", preferredStyle: .actionSheet)
             let rectangularBlurAction = UIAlertAction(title: "Rectangular Blur", style: .default) { (action) in
-                if let blurredImage = self?.blurFilter() {
+                if let blurredImage = self?.rectangularBlurFilter() {
                     self?.displayFilteredImage(imageToDisplay: blurredImage)
                 }
             }
             let discBlurAction = UIAlertAction(title: "Disc Blur", style: .default) {[weak self] (action) in
-                if let discBlurredImage = self?.discFilter() {
+                if let discBlurredImage = self?.discBlurFilter() {
                     self?.displayFilteredImage(imageToDisplay: discBlurredImage)
                 }
             }
@@ -239,9 +221,11 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         return photoFilter?.outputImage
     }
     
-    func bloomFilter(_ input:CIImage, intensity: Double, radius: Double) -> CIImage? {
+    func bloomFilter(intensity: Double, radius: Double) -> CIImage? {
         let bloomFilter = CIFilter(name:"CIBloom")
-        bloomFilter?.setValue(input, forKey: kCIInputImageKey)
+        if let input = convertToCIImage() {
+            bloomFilter?.setValue(input, forKey: kCIInputImageKey)
+        }
         bloomFilter?.setValue(intensity, forKey: kCIInputIntensityKey)
         bloomFilter?.setValue(radius, forKey: kCIInputRadiusKey)
         return bloomFilter?.outputImage
@@ -255,7 +239,7 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         return gloomFilter?.outputImage
     }
     
-    func blurFilter() -> CIImage? {
+    func rectangularBlurFilter() -> CIImage? {
         if let imageToEdit = previewImage {
             let originalCIImage = CIImage(image:imageToEdit)
             let blurFilter = CIFilter(name:"CIBoxBlur")
@@ -266,7 +250,7 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         return nil
     }
     
-    func discFilter() -> CIImage? {
+    func discBlurFilter() -> CIImage? {
         if let imageToEdit = previewImage {
             let originalCIImage = CIImage(image:imageToEdit)
             let discFilter = CIFilter(name:"CIDiscBlur")
