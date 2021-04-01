@@ -36,7 +36,6 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         imageScrollView.delegate = self
         imageViewDoubleTapGestureRecognizer.delegate = self
         imageViewTripleTapGestureRecognizer.delegate = self
-        addToGalleryButton.isHidden = true
         addToGalleryButtonContainer.isHidden = true
         updateSlider(isHidden: true)
     }
@@ -94,7 +93,6 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
     
     @IBAction func removeFilterButtonClicked(_ sender: UIButton) {
         previewImageView.image = previewImage
-        addToGalleryButton.isHidden = true
         addToGalleryButtonContainer.isHidden = true
         updateSlider(isHidden: true)
     }
@@ -143,92 +141,53 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
     }
 
     @objc private func addFilterButtonClicked() {
-        let filterMenu = UIAlertController(title: "Filters", message: "", preferredStyle: .actionSheet)
-        let colorFilterAction = UIAlertAction(title: "Color Filters", style: .default) { [weak self] (action) in
-            let colorFilterMenu = UIAlertController(title: "", message: "Choose required Color Filter", preferredStyle: .actionSheet)
-            let sepiaFilterAction = UIAlertAction(title: "Sepia Filter", style: .default) {[weak self] (action) in
-                self?.updateSlider(isHidden: false)
-                self?.callingFilter = "sepia"
-                if let inputUIImage = self?.previewImage,
-                let sepiaCIImage = self?.imageFilterManager.sepiaFilter(inputUIImage, intensity:Double(self?.intensitySlider.value ?? 0)) {
-                    self?.displayFilteredImage(imageToDisplay: sepiaCIImage)
+        UIApplication.shared.showAlert(ofType: .filterMenu, onViewController: self) {
+            UIApplication.shared.showAlert(ofType: .colorFilterMenu, onViewController: self) {
+                self.updateSlider(isHidden: false)
+                self.callingFilter = "sepia"
+                if let inputUIImage = self.previewImage,
+                   let sepiaCIImage = self.imageFilterManager.sepiaFilter(inputUIImage, intensity:Double(self.intensitySlider.value )) {
+                    self.displayFilteredImage(imageToDisplay: sepiaCIImage)
                 }
-            }
-            let photoFilterAction = UIAlertAction(title: "Photo Effect Transfer Filter", style: .default) { [weak self] (action) in
-                self?.updateSlider(isHidden: true)
-                if let inputUIImage = self?.previewImage,
-                   let photoFilterCIImage = self?.imageFilterManager.photoEffectFilter(inputUIImage) {
-                    self?.displayFilteredImage(imageToDisplay: photoFilterCIImage)
+            } alert2Action: {
+                self.updateSlider(isHidden: true)
+                if let inputUIImage = self.previewImage,
+                   let photoFilterCIImage = self.imageFilterManager.photoEffectFilter(inputUIImage) {
+                    self.displayFilteredImage(imageToDisplay: photoFilterCIImage)
                 }
+            } alert3Action: {
             }
-            colorFilterMenu.addAction(sepiaFilterAction)
-            colorFilterMenu.addAction(photoFilterAction)
-            self?.presentAlertController(colorFilterMenu)
-        }
-        
-        let styleFilterAction = UIAlertAction(title: "Style Filters", style: .default) { [weak self] (action) in
-            let styleFilterMenu = UIAlertController(title: "", message: "Choose required Style Filter", preferredStyle: .actionSheet)
-            let bloomFilterAction = UIAlertAction(title: "Bloom Filter", style: .default) {[weak self] (action) in
-                self?.updateSlider(isHidden: false)
-                self?.callingFilter = "bloom"
-                if let inputUIImage = self?.previewImage,
-                   let bloomCIImage = self?.imageFilterManager.bloomFilter(inputUIImage, intensity: Double(self?.intensitySlider.value ?? 0), radius: 3) {
-                    self?.displayFilteredImage(imageToDisplay: bloomCIImage)
+        } alert2Action: {
+            UIApplication.shared.showAlert(ofType: .styleFilterMenu, onViewController: self) {
+                self.updateSlider(isHidden: false)
+                self.callingFilter = "bloom"
+                if let inputUIImage = self.previewImage,
+                   let bloomCIImage = self.imageFilterManager.bloomFilter(inputUIImage, intensity: Double(self.intensitySlider.value ), radius: 3) {
+                    self.displayFilteredImage(imageToDisplay: bloomCIImage)
                 }
-            }
-            let gloomFilterAction = UIAlertAction(title: "Gloom Filter", style: .default) {[weak self] (action) in
-                self?.updateSlider(isHidden: false)
-                self?.callingFilter = "gloom"
-                if let inputUIImage = self?.previewImage,
-                   let gloomCIImage = self?.imageFilterManager.gloomFilter(inputUIImage, intensity: Double(self?.intensitySlider.value ?? 0), radius: 3) {
-                    self?.displayFilteredImage(imageToDisplay: gloomCIImage)
+            } alert2Action: {
+                self.updateSlider(isHidden: false)
+                self.callingFilter = "gloom"
+                if let inputUIImage = self.previewImage,
+                   let gloomCIImage = self.imageFilterManager.gloomFilter(inputUIImage, intensity: Double(self.intensitySlider.value), radius: 3) {
+                    self.displayFilteredImage(imageToDisplay: gloomCIImage)
                 }
+            } alert3Action: {
             }
-            styleFilterMenu.addAction(bloomFilterAction)
-            styleFilterMenu.addAction(gloomFilterAction)
-            self?.presentAlertController(styleFilterMenu)
-        }
-        
-        let blurFilterAction = UIAlertAction(title: "Blur Filters", style: .default) {[weak self] (action) in
-            self?.updateSlider(isHidden: true)
-            let blurFilterMenu = UIAlertController(title: "", message: "Choose required Blur Filter", preferredStyle: .actionSheet)
-            let rectangularBlurAction = UIAlertAction(title: "Rectangular Blur", style: .default) {(action) in
-                if let inputUIImage = self?.previewImage,
-                   let blurredImage = self?.imageFilterManager.rectangularBlurFilter(inputUIImage) {
-                    self?.displayFilteredImage(imageToDisplay: blurredImage)
+            
+        } alert3Action: {
+            UIApplication.shared.showAlert(ofType: .blurFilterMenu, onViewController: self) {
+                if let inputUIImage = self.previewImage,
+                   let blurredImage = self.imageFilterManager.rectangularBlurFilter(inputUIImage) {
+                    self.displayFilteredImage(imageToDisplay: blurredImage)
                 }
-            }
-            let discBlurAction = UIAlertAction(title: "Disc Blur", style: .default) {[weak self] (action) in
-                if let inputUIImage = self?.previewImage,
-                   let blurredImage = self?.imageFilterManager.discBlurFilter(inputUIImage) {
-                    self?.displayFilteredImage(imageToDisplay: blurredImage)
+            } alert2Action: {
+                if let inputUIImage = self.previewImage,
+                   let blurredImage = self.imageFilterManager.discBlurFilter(inputUIImage) {
+                    self.displayFilteredImage(imageToDisplay: blurredImage)
                 }
+            } alert3Action: {
             }
-            blurFilterMenu.addAction(rectangularBlurAction)
-            blurFilterMenu.addAction(discBlurAction)
-            self?.presentAlertController(blurFilterMenu)
-        }
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-        filterMenu.addAction(colorFilterAction)
-        filterMenu.addAction(styleFilterAction)
-        filterMenu.addAction(blurFilterAction)
-        filterMenu.addAction(cancelAction)
-        presentAlertController(filterMenu)
-        
-    }
-    
-    func presentAlertController(_ menuToPresent: UIAlertController) {
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            if let popoverPresentationController = menuToPresent.popoverPresentationController {
-                popoverPresentationController.permittedArrowDirections = .up
-                popoverPresentationController.sourceView = self.view
-                popoverPresentationController.sourceRect = CGRect(x: self.view.frame.maxX-50, y: self.view.frame.minY+25, width: 30, height: 30)
-                menuToPresent.modalPresentationStyle = .popover
-                present(menuToPresent, animated: true, completion: nil)
-            }
-        } else {
-            present(menuToPresent, animated: true, completion: nil)
         }
     }
     
@@ -260,19 +219,5 @@ extension PreviewScreenViewController: UIGestureRecognizerDelegate {
     }
 }
 
-// MARK: -
-// MARK: Fixing the orientation
-// MARK: -
-extension UIImage {
-    func fixOrientation() -> UIImage {
-        if self.imageOrientation == UIImage.Orientation.up {
-            return self
-        }
-        UIGraphicsBeginImageContextWithOptions(self.size, false, self.scale)
-        self.draw(in: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height))
-        let normalizedImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
-        return normalizedImage
-    }
-}
+
 

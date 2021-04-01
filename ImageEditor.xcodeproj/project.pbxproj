@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		203D4A552615AF2800841DC5 /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 203D4A542615AF2800841DC5 /* UIImageExtension.swift */; };
+		203D4A5C2615AFC600841DC5 /* UIApplicationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 203D4A5B2615AFC600841DC5 /* UIApplicationExtension.swift */; };
+		203D4A5F2615B0BE00841DC5 /* UIAlertControllerAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 203D4A5E2615B0BE00841DC5 /* UIAlertControllerAction.swift */; };
+		203D4A622615B17400841DC5 /* AlertProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 203D4A612615B17400841DC5 /* AlertProtocols.swift */; };
+		203D4A672615C05600841DC5 /* AlertFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 203D4A662615C05600841DC5 /* AlertFactory.swift */; };
+		203D4A6A2615C6FD00841DC5 /* AlertConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 203D4A692615C6FD00841DC5 /* AlertConstants.swift */; };
 		2042342226145C700064B6B4 /* ImageFilterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2042342126145C700064B6B4 /* ImageFilterManager.swift */; };
 		2098C1F52609B6190077846F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2098C1F42609B6190077846F /* AppDelegate.swift */; };
 		2098C1F72609B6190077846F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2098C1F62609B6190077846F /* SceneDelegate.swift */; };
@@ -20,6 +26,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		203D4A542615AF2800841DC5 /* UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
+		203D4A5B2615AFC600841DC5 /* UIApplicationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplicationExtension.swift; sourceTree = "<group>"; };
+		203D4A5E2615B0BE00841DC5 /* UIAlertControllerAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIAlertControllerAction.swift; sourceTree = "<group>"; };
+		203D4A612615B17400841DC5 /* AlertProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertProtocols.swift; sourceTree = "<group>"; };
+		203D4A662615C05600841DC5 /* AlertFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertFactory.swift; sourceTree = "<group>"; };
+		203D4A692615C6FD00841DC5 /* AlertConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertConstants.swift; sourceTree = "<group>"; };
 		2042342126145C700064B6B4 /* ImageFilterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFilterManager.swift; sourceTree = "<group>"; };
 		2098C1F12609B6190077846F /* ImageEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2098C1F42609B6190077846F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -48,6 +60,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		203D4A592615AF9000841DC5 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				203D4A542615AF2800841DC5 /* UIImageExtension.swift */,
+				203D4A5B2615AFC600841DC5 /* UIApplicationExtension.swift */,
+				203D4A5E2615B0BE00841DC5 /* UIAlertControllerAction.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		203D4A642615B1AE00841DC5 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				203D4A612615B17400841DC5 /* AlertProtocols.swift */,
+			);
+			path = Protocol;
+			sourceTree = "<group>";
+		};
+		203D4A6C2615C81B00841DC5 /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				203D4A692615C6FD00841DC5 /* AlertConstants.swift */,
+			);
+			path = Constants;
+			sourceTree = "<group>";
+		};
 		2098C1E82609B6190077846F = {
 			isa = PBXGroup;
 			children = (
@@ -79,6 +117,10 @@
 				2098C1FD2609B61D0077846F /* Assets.xcassets */,
 				2098C1FF2609B61D0077846F /* LaunchScreen.storyboard */,
 				2098C2022609B61D0077846F /* Info.plist */,
+				203D4A592615AF9000841DC5 /* Extension */,
+				203D4A642615B1AE00841DC5 /* Protocol */,
+				203D4A662615C05600841DC5 /* AlertFactory.swift */,
+				203D4A6C2615C81B00841DC5 /* Constants */,
 			);
 			path = ImageEditor;
 			sourceTree = "<group>";
@@ -198,9 +240,15 @@
 			files = (
 				2098C2212609EEC50077846F /* PreviewScreenViewController.swift in Sources */,
 				2042342226145C700064B6B4 /* ImageFilterManager.swift in Sources */,
+				203D4A622615B17400841DC5 /* AlertProtocols.swift in Sources */,
+				203D4A552615AF2800841DC5 /* UIImageExtension.swift in Sources */,
+				203D4A5F2615B0BE00841DC5 /* UIAlertControllerAction.swift in Sources */,
 				2098C1F52609B6190077846F /* AppDelegate.swift in Sources */,
 				2098C1F72609B6190077846F /* SceneDelegate.swift in Sources */,
 				2098C2102609BCED0077846F /* HomeScreenViewController.swift in Sources */,
+				203D4A6A2615C6FD00841DC5 /* AlertConstants.swift in Sources */,
+				203D4A672615C05600841DC5 /* AlertFactory.swift in Sources */,
+				203D4A5C2615AFC600841DC5 /* UIApplicationExtension.swift in Sources */,
 				2098C21D2609CA6A0077846F /* MyImagePickerController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
