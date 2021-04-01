@@ -26,6 +26,7 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
     var callingFilter = "sepia"
     var filterApplyingQueue = DispatchQueue(label: "ImageFilterQueue")
     let imageFilterManager = ImageFilterManager()
+    var imageWithFilter: UIImage?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -80,6 +81,16 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
             }
         }
     }
+    
+    @IBAction func compareButtonPressed(_ sender: UIButton) {
+        imageWithFilter = previewImageView.image
+        previewImageView.image = previewImage
+    }
+    
+    @IBAction func compareButtonReleased(_ sender: UIButton) {
+        previewImageView.image = imageWithFilter
+    }
+    
     
     @IBAction func removeFilterButtonClicked(_ sender: UIButton) {
         previewImageView.image = previewImage
