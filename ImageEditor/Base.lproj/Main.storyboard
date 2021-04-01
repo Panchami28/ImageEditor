@@ -109,7 +109,7 @@
                                         <rect key="frame" x="0.0" y="752" width="414" height="66"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AH7-Fy-7eD">
-                                                <rect key="frame" x="124" y="6" width="166" height="54"/>
+                                                <rect key="frame" x="8" y="8" width="166" height="50"/>
                                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
                                                 <inset key="contentEdgeInsets" minX="15" minY="15" maxX="15" maxY="15"/>
                                                 <state key="normal" title="Add to gallery">
@@ -119,12 +119,27 @@
                                                     <action selector="addToGalleryButtonClicked:" destination="1Nk-eS-mxF" eventType="touchUpInside" id="c2v-4K-QZ0"/>
                                                 </connections>
                                             </button>
+                                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FzT-pQ-95O">
+                                                <rect key="frame" x="233" y="6" width="173" height="53"/>
+                                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
+                                                <inset key="contentEdgeInsets" minX="15" minY="15" maxX="15" maxY="15"/>
+                                                <state key="normal" title="Remove filter">
+                                                    <color key="titleColor" systemColor="secondarySystemBackgroundColor"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="removeFilterButtonClicked:" destination="1Nk-eS-mxF" eventType="touchUpInside" id="bRQ-gm-nFr"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <color key="backgroundColor" red="0.010370399746192915" green="0.0053791430976146051" blue="0.0077695303832305777" alpha="0.32579730308219179" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
-                                            <constraint firstItem="AH7-Fy-7eD" firstAttribute="centerY" secondItem="n8L-eg-DI8" secondAttribute="centerY" id="Jc6-ay-b37"/>
+                                            <constraint firstItem="AH7-Fy-7eD" firstAttribute="leading" secondItem="n8L-eg-DI8" secondAttribute="leading" constant="8" id="Ehp-D4-k6z"/>
+                                            <constraint firstItem="FzT-pQ-95O" firstAttribute="top" secondItem="n8L-eg-DI8" secondAttribute="top" constant="8" id="LnF-UH-Pp5"/>
+                                            <constraint firstAttribute="trailing" secondItem="FzT-pQ-95O" secondAttribute="trailing" constant="8" id="NZ4-7B-QTQ"/>
                                             <constraint firstAttribute="height" constant="66" id="W4K-MQ-Aov"/>
-                                            <constraint firstItem="AH7-Fy-7eD" firstAttribute="centerX" secondItem="n8L-eg-DI8" secondAttribute="centerX" id="yGb-f4-k2Y"/>
+                                            <constraint firstAttribute="bottom" secondItem="AH7-Fy-7eD" secondAttribute="bottom" constant="8" id="gjl-Tn-uZX"/>
+                                            <constraint firstItem="AH7-Fy-7eD" firstAttribute="top" secondItem="n8L-eg-DI8" secondAttribute="top" constant="8" id="nQH-Ma-MQ9"/>
+                                            <constraint firstAttribute="bottom" secondItem="FzT-pQ-95O" secondAttribute="bottom" constant="8" id="zP6-Vq-GVY"/>
                                         </constraints>
                                     </view>
                                 </subviews>

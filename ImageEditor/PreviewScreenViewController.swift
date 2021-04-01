@@ -81,6 +81,13 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
+    @IBAction func removeFilterButtonClicked(_ sender: UIButton) {
+        previewImageView.image = previewImage
+        addToGalleryButton.isHidden = true
+        addToGalleryButtonContainer.isHidden = true
+        updateSlider(isHidden: true)
+    }
+    
 //MARK: -
 //MARK: - Add image to Library
 //MARK: -
@@ -90,6 +97,7 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         }
         addToGalleryButton.isHidden = true
         addToGalleryButtonContainer.isHidden = true
+        updateSlider(isHidden: true)
     }
     
     @objc func addedImageToLibrary(_ image: UIImage,didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
@@ -158,6 +166,7 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
                 }
             }
             let gloomFilterAction = UIAlertAction(title: "Gloom Filter", style: .default) {[weak self] (action) in
+                self?.updateSlider(isHidden: false)
                 self?.callingFilter = "gloom"
                 if let inputUIImage = self?.previewImage,
                    let gloomCIImage = self?.imageFilterManager.gloomFilter(inputUIImage, intensity: Double(self?.intensitySlider.value ?? 0), radius: 3) {
@@ -252,7 +261,7 @@ extension UIImage {
         self.draw(in: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height))
         let normalizedImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-        return normalizedImage;
+        return normalizedImage
     }
 }
 
