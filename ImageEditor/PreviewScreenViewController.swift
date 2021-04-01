@@ -9,7 +9,9 @@ import UIKit
 import AVFoundation
 import Photos
 
-class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
+typealias ImageFilterViewController = UIViewController & IEPreviewProtocol
+
+class PreviewScreenViewController: ImageFilterViewController, UIScrollViewDelegate {
     
 // MARK: -
 // MARK: IB Outlets
@@ -21,12 +23,20 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var addToGalleryButton: UIButton!
     @IBOutlet weak var addToGalleryButtonContainer: UIView!
     @IBOutlet weak var intensitySlider: UISlider!
+    @IBOutlet weak var radiusSlider: UISlider!
     
+    @IBOutlet weak var intensitySliderStack: UIStackView!
+    @IBOutlet weak var radiusSliderStack: UIStackView!
+    
+    @IBOutlet weak var compareButton: UIButton!
+    
+    @IBOutlet weak var clearButton: UIButton!
+
     var previewImage: UIImage?
-    var callingFilter = "sepia"
-    var filterApplyingQueue = DispatchQueue(label: "ImageFilterQueue")
-    let imageFilterManager = ImageFilterManager()
-    var imageWithFilter: UIImage?
+    private var imageWithFilter: UIImage?
+
+    private lazy var imageFilterManager = ImageFilterManager()
+    private var currentFilterType: IEFilterType = .none
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,8 +46,6 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         imageScrollView.delegate = self
         imageViewDoubleTapGestureRecognizer.delegate = self
         imageViewTripleTapGestureRecognizer.delegate = self
-        addToGalleryButtonContainer.isHidden = true
-        updateSlider(isHidden: true)
     }
 
 // MARK: -
@@ -59,28 +67,15 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
                 imageScrollView.setZoomScale(imageScrollView.minimumZoomScale, animated: true)
             }
     }
+
     
     @IBAction func sliderValueChanged(_ sender: UISlider) {
-        let changedIntensityValue = intensitySlider.value
-        var filteredImage : CIImage?
-        filterApplyingQueue.async { [weak self] in
-            if let inputUIImage = self?.previewImage {
-                if self?.callingFilter == "bloom" {
-                    filteredImage = self?.imageFilterManager.bloomFilter(inputUIImage, intensity: Double(changedIntensityValue), radius: 3)
-                }
-                else if self?.callingFilter == "gloom" {
-                    filteredImage = self?.imageFilterManager.gloomFilter(inputUIImage, intensity: Double(changedIntensityValue), radius: 3)
-                }
-                else if self?.callingFilter == "sepia" {
-                    filteredImage = self?.imageFilterManager.sepiaFilter(inputUIImage, intensity: Double(changedIntensityValue))
-                }
-                DispatchQueue.main.async {
-                    self?.displayFilteredImage(imageToDisplay: filteredImage)
-                }
-            }
-        }
+        let radius = radiusSlider.value
+        let intensity = intensitySlider.value
+        filterImage(WithIntensity: intensity, radius: radius)
+
     }
-    
+
     @IBAction func compareButtonPressed(_ sender: UIButton) {
         imageWithFilter = previewImageView.image
         previewImageView.image = previewImage
@@ -94,7 +89,7 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
     @IBAction func removeFilterButtonClicked(_ sender: UIButton) {
         previewImageView.image = previewImage
         addToGalleryButtonContainer.isHidden = true
-        updateSlider(isHidden: true)
+//        updateSlider(isHidden: true)
     }
     
 //MARK: -
@@ -106,7 +101,7 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
         }
         addToGalleryButton.isHidden = true
         addToGalleryButtonContainer.isHidden = true
-        updateSlider(isHidden: true)
+//        updateSlider(isHidden: true)
     }
     
     @objc func addedImageToLibrary(_ image: UIImage,didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
@@ -141,52 +136,15 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
     }
 
     @objc private func addFilterButtonClicked() {
-        UIApplication.shared.showAlert(ofType: .filterMenu, onViewController: self) {
-            UIApplication.shared.showAlert(ofType: .colorFilterMenu, onViewController: self) {
-                self.updateSlider(isHidden: false)
-                self.callingFilter = "sepia"
-                if let inputUIImage = self.previewImage,
-                   let sepiaCIImage = self.imageFilterManager.sepiaFilter(inputUIImage, intensity:Double(self.intensitySlider.value )) {
-                    self.displayFilteredImage(imageToDisplay: sepiaCIImage)
-                }
-            } alert2Action: {
-                self.updateSlider(isHidden: true)
-                if let inputUIImage = self.previewImage,
-                   let photoFilterCIImage = self.imageFilterManager.photoEffectFilter(inputUIImage) {
-                    self.displayFilteredImage(imageToDisplay: photoFilterCIImage)
-                }
-            } alert3Action: {
-            }
-        } alert2Action: {
-            UIApplication.shared.showAlert(ofType: .styleFilterMenu, onViewController: self) {
-                self.updateSlider(isHidden: false)
-                self.callingFilter = "bloom"
-                if let inputUIImage = self.previewImage,
-                   let bloomCIImage = self.imageFilterManager.bloomFilter(inputUIImage, intensity: Double(self.intensitySlider.value ), radius: 3) {
-                    self.displayFilteredImage(imageToDisplay: bloomCIImage)
-                }
-            } alert2Action: {
-                self.updateSlider(isHidden: false)
-                self.callingFilter = "gloom"
-                if let inputUIImage = self.previewImage,
-                   let gloomCIImage = self.imageFilterManager.gloomFilter(inputUIImage, intensity: Double(self.intensitySlider.value), radius: 3) {
-                    self.displayFilteredImage(imageToDisplay: gloomCIImage)
-                }
-            } alert3Action: {
-            }
-            
-        } alert3Action: {
-            UIApplication.shared.showAlert(ofType: .blurFilterMenu, onViewController: self) {
-                if let inputUIImage = self.previewImage,
-                   let blurredImage = self.imageFilterManager.rectangularBlurFilter(inputUIImage) {
-                    self.displayFilteredImage(imageToDisplay: blurredImage)
-                }
-            } alert2Action: {
-                if let inputUIImage = self.previewImage,
-                   let blurredImage = self.imageFilterManager.discBlurFilter(inputUIImage) {
-                    self.displayFilteredImage(imageToDisplay: blurredImage)
-                }
-            } alert3Action: {
+        let filterMenu = UIAlertController.filterOptionsForImageEditing(sourceViewController: self)
+        presentAlertController(filterMenu)
+    }
+
+    private func filterImage(WithIntensity intensity: Float = 2.5, radius: Float = 2.5) {
+        guard let imageToEdit = previewImage else { return }
+        self.imageFilterManager.applyFilter(filterType: currentFilterType, intensity: intensity, radius: radius, onImage: imageToEdit) {[weak self] (displayImage) in
+            if let displayImage = displayImage {
+                self?.previewImageView.image = displayImage
             }
         }
     }
@@ -200,12 +158,19 @@ class PreviewScreenViewController: UIViewController, UIScrollViewDelegate {
             addToGalleryButtonContainer.isHidden = false
         }
     }
-    
-    func updateSlider(isHidden value: Bool) {
-        switch value {
-        case true : intensitySlider.isHidden = true
-        case false : intensitySlider.isHidden = false
-        }
+
+    func resetSliders() {
+        intensitySlider.value = 0
+        radiusSlider.value = 0
+    }
+
+    func applyFilter(_ filterType: IEFilterType) {
+        resetSliders()
+        currentFilterType = filterType
+        intensitySliderStack.isHidden = !filterType.hasIntensity
+        radiusSliderStack.isHidden = !filterType.hasRadius
+
+        filterImage()
     }
 }
 

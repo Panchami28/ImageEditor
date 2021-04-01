@@ -22,6 +22,9 @@
 		2098C2102609BCED0077846F /* HomeScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2098C20F2609BCED0077846F /* HomeScreenViewController.swift */; };
 		2098C21D2609CA6A0077846F /* MyImagePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2098C21C2609CA6A0077846F /* MyImagePickerController.swift */; };
 		2098C2212609EEC50077846F /* PreviewScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2098C2202609EEC50077846F /* PreviewScreenViewController.swift */; };
+		766C9F132615A79C009D4A30 /* IEConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 766C9F122615A79C009D4A30 /* IEConstants.swift */; };
+		766C9F162615ADC5009D4A30 /* UIAlertController+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 766C9F152615ADC5009D4A30 /* UIAlertController+Convenience.swift */; };
+		76FA0BE226160D64003BE915 /* UIViewController+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76FA0BE126160D64003BE915 /* UIViewController+Convenience.swift */; };
 		C06D8F98F753A95A933B4E2F /* Pods_ImageEditor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE572EBB91D9630E54C5D9B /* Pods_ImageEditor.framework */; };
 /* End PBXBuildFile section */
 
@@ -44,6 +47,9 @@
 		2098C21C2609CA6A0077846F /* MyImagePickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyImagePickerController.swift; sourceTree = "<group>"; };
 		2098C2202609EEC50077846F /* PreviewScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewScreenViewController.swift; sourceTree = "<group>"; };
 		272BF6B6BFC4943C3EF1150C /* Pods-ImageEditor.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageEditor.debug.xcconfig"; path = "Target Support Files/Pods-ImageEditor/Pods-ImageEditor.debug.xcconfig"; sourceTree = "<group>"; };
+		766C9F122615A79C009D4A30 /* IEConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IEConstants.swift; sourceTree = "<group>"; };
+		766C9F152615ADC5009D4A30 /* UIAlertController+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+Convenience.swift"; sourceTree = "<group>"; };
+		76FA0BE126160D64003BE915 /* UIViewController+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Convenience.swift"; sourceTree = "<group>"; };
 		DCE572EBB91D9630E54C5D9B /* Pods_ImageEditor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ImageEditor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDEB76F1B1FA1846CDC7F4A9 /* Pods-ImageEditor.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageEditor.release.xcconfig"; path = "Target Support Files/Pods-ImageEditor/Pods-ImageEditor.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -108,9 +114,12 @@
 			isa = PBXGroup;
 			children = (
 				2098C1F42609B6190077846F /* AppDelegate.swift */,
+				766C9F122615A79C009D4A30 /* IEConstants.swift */,
 				2098C1F62609B6190077846F /* SceneDelegate.swift */,
 				2098C20F2609BCED0077846F /* HomeScreenViewController.swift */,
 				2098C2202609EEC50077846F /* PreviewScreenViewController.swift */,
+				76FA0BE126160D64003BE915 /* UIViewController+Convenience.swift */,
+				766C9F152615ADC5009D4A30 /* UIAlertController+Convenience.swift */,
 				2098C21C2609CA6A0077846F /* MyImagePickerController.swift */,
 				2042342126145C700064B6B4 /* ImageFilterManager.swift */,
 				2098C1FA2609B6190077846F /* Main.storyboard */,
@@ -238,15 +247,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				766C9F162615ADC5009D4A30 /* UIAlertController+Convenience.swift in Sources */,
 				2098C2212609EEC50077846F /* PreviewScreenViewController.swift in Sources */,
 				2042342226145C700064B6B4 /* ImageFilterManager.swift in Sources */,
 				203D4A622615B17400841DC5 /* AlertProtocols.swift in Sources */,
 				203D4A552615AF2800841DC5 /* UIImageExtension.swift in Sources */,
 				203D4A5F2615B0BE00841DC5 /* UIAlertControllerAction.swift in Sources */,
+				766C9F132615A79C009D4A30 /* IEConstants.swift in Sources */,
 				2098C1F52609B6190077846F /* AppDelegate.swift in Sources */,
 				2098C1F72609B6190077846F /* SceneDelegate.swift in Sources */,
 				2098C2102609BCED0077846F /* HomeScreenViewController.swift in Sources */,
 				203D4A6A2615C6FD00841DC5 /* AlertConstants.swift in Sources */,
+				76FA0BE226160D64003BE915 /* UIViewController+Convenience.swift in Sources */,
 				203D4A672615C05600841DC5 /* AlertFactory.swift in Sources */,
 				203D4A5C2615AFC600841DC5 /* UIApplicationExtension.swift in Sources */,
 				2098C21D2609CA6A0077846F /* MyImagePickerController.swift in Sources */,
@@ -398,7 +410,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 49M2K9GQS4;
+				DEVELOPMENT_TEAM = U4MRT5KL8R;
 				INFOPLIST_FILE = ImageEditor/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -419,7 +431,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 49M2K9GQS4;
+				DEVELOPMENT_TEAM = U4MRT5KL8R;
 				INFOPLIST_FILE = ImageEditor/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
