@@ -12,7 +12,6 @@ import Photos
 typealias ImageFilterViewController = UIViewController & IEPreviewProtocol
 
 class PreviewScreenViewController: ImageFilterViewController, UIScrollViewDelegate {
-    
 // MARK: -
 // MARK: IB Outlets
 // MARK: -
@@ -73,7 +72,6 @@ class PreviewScreenViewController: ImageFilterViewController, UIScrollViewDelega
         let radius = radiusSlider.value
         let intensity = intensitySlider.value
         filterImage(WithIntensity: intensity, radius: radius)
-
     }
 
     @IBAction func compareButtonPressed(_ sender: UIButton) {
@@ -85,11 +83,11 @@ class PreviewScreenViewController: ImageFilterViewController, UIScrollViewDelega
         previewImageView.image = imageWithFilter
     }
     
-    
     @IBAction func removeFilterButtonClicked(_ sender: UIButton) {
         previewImageView.image = previewImage
         addToGalleryButtonContainer.isHidden = true
-//        updateSlider(isHidden: true)
+        intensitySliderStack.isHidden = true
+        radiusSliderStack.isHidden = true
     }
     
 //MARK: -
@@ -99,9 +97,7 @@ class PreviewScreenViewController: ImageFilterViewController, UIScrollViewDelega
         if let imageToSave = previewImageView.image {
             UIImageWriteToSavedPhotosAlbum(imageToSave, self, #selector(addedImageToLibrary(_:didFinishSavingWithError:contextInfo:)), nil)
         }
-        addToGalleryButton.isHidden = true
         addToGalleryButtonContainer.isHidden = true
-//        updateSlider(isHidden: true)
     }
     
     @objc func addedImageToLibrary(_ image: UIImage,didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
@@ -149,19 +145,9 @@ class PreviewScreenViewController: ImageFilterViewController, UIScrollViewDelega
         }
     }
     
-    func displayFilteredImage(imageToDisplay : CIImage?) {
-        if let imageToEdit = previewImage,
-           let imageToBeDisplayed = imageToDisplay {
-            let capturedImage = UIImage(ciImage: imageToBeDisplayed, scale: imageToEdit.scale, orientation: imageToEdit.imageOrientation)
-            previewImageView.image = capturedImage.fixOrientation()
-            addToGalleryButton.isHidden = false
-            addToGalleryButtonContainer.isHidden = false
-        }
-    }
-
     func resetSliders() {
-        intensitySlider.value = 0
-        radiusSlider.value = 0
+        intensitySlider.value = 3
+        radiusSlider.value = 3
     }
 
     func applyFilter(_ filterType: IEFilterType) {
@@ -169,7 +155,7 @@ class PreviewScreenViewController: ImageFilterViewController, UIScrollViewDelega
         currentFilterType = filterType
         intensitySliderStack.isHidden = !filterType.hasIntensity
         radiusSliderStack.isHidden = !filterType.hasRadius
-
+        addToGalleryButtonContainer.isHidden = false
         filterImage()
     }
 }

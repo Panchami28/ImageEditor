@@ -2,7 +2,7 @@
 //  IEConstants.swift
 //  ImageEditor
 //
-//  Created by Darshan D T on 01/04/21.
+//  Created by Panchami Rao on 01/04/21.
 //
 
 import Foundation

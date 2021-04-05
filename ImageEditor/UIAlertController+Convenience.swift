@@ -2,7 +2,7 @@
 //  UIAlertController+Convenience.swift
 //  ImageEditor
 //
-//  Created by Darshan D T on 01/04/21.
+//  Created by Panchami Rao on 01/04/21.
 //
 
 import Foundation
@@ -21,21 +21,21 @@ extension UIAlertController {
             let colorFilterMenu = UIAlertController(title: "Color", message: "Choose required Color Filter", preferredStyle: .actionSheet)
             let actions = Self.actionsForColorFilter(forSourceController: sourceViewController)
             colorFilterMenu.addActions(actions)
-            sourceViewController.present(colorFilterMenu, animated: true, completion: nil)
+            sourceViewController.presentAlertController(colorFilterMenu)
         }
 
         let styleFilterAction = UIAlertAction(title: "Style Filters", style: .default) { (action) in
             let styleFilterMenu = UIAlertController(title: "Style", message: "Choose required Style Filter", preferredStyle: .actionSheet)
             let actions = Self.actionsForStyleFilter(forSourceController: sourceViewController)
             styleFilterMenu.addActions(actions)
-            sourceViewController.present(styleFilterMenu, animated: true, completion: nil)
+            sourceViewController.presentAlertController(styleFilterMenu)
         }
 
         let blurFilterAction = UIAlertAction(title: "Blur Filters", style: .default) { (action) in
-            let blurFilterMenu = UIAlertController(title: "Style", message: "Choose required Blur Filter", preferredStyle: .actionSheet)
-            let actions = Self.actionsForStyleFilter(forSourceController: sourceViewController)
+            let blurFilterMenu = UIAlertController(title: "Blur", message: "Choose required Blur Filter", preferredStyle: .actionSheet)
+            let actions = Self.actionsForBlurFilter(forSourceController: sourceViewController)
             blurFilterMenu.addActions(actions)
-            sourceViewController.present(blurFilterMenu, animated: true, completion: nil)
+            sourceViewController.presentAlertController(blurFilterMenu)
         }
 
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
@@ -88,15 +88,15 @@ extension UIAlertController {
 
     fileprivate class func actionsForBlurFilter<T: ImageFilterViewController>(forSourceController sourceController: T) -> [UIAlertAction] {
     
-        let bloomFilterAction = UIAlertAction(title: "Disc Blur", style: .default) { (action) in
+        let discBlurFilterAction = UIAlertAction(title: "Disc Blur", style: .default) { (action) in
             sourceController.applyFilter(.blur(subfilter: .disc(radius: 5.0)))
         }
 
-        let gloomFilterAction = UIAlertAction(title: "Rectangular Blur", style: .default) { (action) in
+        let rectangularBlurFilterAction = UIAlertAction(title: "Rectangular Blur", style: .default) { (action) in
             sourceController.applyFilter(.blur(subfilter: .rectangular(radius: 5.0)))
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
 
-        return [bloomFilterAction, gloomFilterAction, cancelAction]
+        return [discBlurFilterAction, rectangularBlurFilterAction, cancelAction]
     }
 }

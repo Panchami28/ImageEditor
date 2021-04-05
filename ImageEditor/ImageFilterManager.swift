@@ -102,7 +102,7 @@ class ImageFilterManager: NSObject {
         sepiaFilter?.setValue(intensity, forKey: kCIInputIntensityKey)
         if let filteredImage = sepiaFilter?.outputImage {
             let displayImage = UIImage(ciImage: filteredImage, scale: inputImage.scale, orientation: inputImage.imageOrientation)
-            outputImage = displayImage
+            outputImage = displayImage.fixOrientation()
         }
         return outputImage
         
@@ -116,7 +116,7 @@ class ImageFilterManager: NSObject {
         }
         if let filteredImage = transferFilter?.outputImage {
             let displayImage = UIImage(ciImage: filteredImage, scale: inputImage.scale, orientation: inputImage.imageOrientation)
-            outputImage = displayImage
+            outputImage = displayImage.fixOrientation()
         }
         return outputImage
     }
@@ -131,7 +131,7 @@ class ImageFilterManager: NSObject {
         bloomFilter?.setValue(radius, forKey: kCIInputRadiusKey)
         if let filteredImage = bloomFilter?.outputImage {
             let displayImage = UIImage(ciImage: filteredImage, scale: inputImage.scale, orientation: inputImage.imageOrientation)
-            outputImage = displayImage
+            outputImage = displayImage.fixOrientation()
         }
         return outputImage
     }
@@ -146,7 +146,7 @@ class ImageFilterManager: NSObject {
         gloomFilter?.setValue(radius, forKey: kCIInputRadiusKey)
         if let filteredImage = gloomFilter?.outputImage {
             let displayImage = UIImage(ciImage: filteredImage, scale: inputImage.scale, orientation: inputImage.imageOrientation)
-            outputImage = displayImage
+            outputImage = displayImage.fixOrientation()
         }
         return outputImage
     }
@@ -160,7 +160,7 @@ class ImageFilterManager: NSObject {
         blurFilter?.setValue(radius, forKey: kCIInputRadiusKey)
         if let filteredImage = blurFilter?.outputImage {
             let displayImage = UIImage(ciImage: filteredImage, scale: inputImage.scale, orientation: inputImage.imageOrientation)
-            outputImage = displayImage
+            outputImage = displayImage.fixOrientation()
         }
         return outputImage
     }
@@ -174,7 +174,7 @@ class ImageFilterManager: NSObject {
         discFilter?.setValue(5, forKey: kCIInputRadiusKey)
         if let filteredImage = discFilter?.outputImage {
             let displayImage = UIImage(ciImage: filteredImage, scale: inputImage.scale, orientation: inputImage.imageOrientation)
-            outputImage = displayImage
+            outputImage = displayImage.fixOrientation()
         }
         return outputImage
     }
